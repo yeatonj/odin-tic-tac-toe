@@ -59,3 +59,51 @@ const Player = function(name) {
 
     return {win, getName, getScore};
 }
+
+const GameController = function(nameOne, nameTwo) {
+    const players = [Player(nameOne), Player(nameTwo)];
+    const playerMarkers = ['X', 'O'];
+
+    var activePlayer = 0;
+
+    function swapActive() {
+        activePlayer = (activePlayer + 1) % 2;
+    }
+
+    const startGame = function() {
+        activePlayer = 0;
+        Gameboard.resetBoard();
+    }
+
+    // returns true on game over
+    const placePiece = function(loc) {
+        // if successful
+        if (Gameboard.pickSquare(playerMarkers[activePlayer], loc)) {
+            // check for a win
+            if (Gameboard.checkWin() === playerMarkers[activePlayer]) {
+                players[activePlayer].win();
+                return true;
+            } else if (Gameboard.checkWin() === playerMarkers[activePlayer]) {
+                // no winner but game over
+                return true;
+            } else {
+                // No winner, swap active player
+                swapActive();
+                return false;
+            }
+
+        } else {
+            // not successful, game definitely not over, but don't swap active player
+            return false;
+        }
+    }
+
+    const getStats = () => {return {p1Name : players[0].getName(), 
+        p1Score : players[0].getScore(), 
+        p2Name : players[1].getName(), 
+        p2Score : players[1].getScore()}};
+
+    return {startGame, placePiece, getStats};
+}
+
+const game = GameController("n1", "n2");
