@@ -72,7 +72,8 @@ const GameController = (function() {
         activePlayer = (activePlayer + 1) % 2;
     }
 
-    const setPlayerName = (pName, id) => {console.log(players[id].setName(pName))};
+    const setPlayerName = (pName, id) => {players[id].setName(pName)};
+    const getActivePlayer = () => players[activePlayer].getName();
 
     const startGame = function() {
         activePlayer = 0;
@@ -114,5 +115,58 @@ const GameController = (function() {
         p1Name : players[1].getName(), 
         p1Score : players[1].getScore()}};
 
-    return {startGame, placePiece, getStats, setPlayerName};
+    return {startGame, placePiece, getStats, setPlayerName, getActivePlayer};
 }) ();
+
+const DisplayManager = (function () {
+    const getNames = function() {
+        const dialog = document.querySelector("dialog");
+        const confBut = document.querySelector("dialog button");
+        const names = [...document.querySelectorAll("form input")];
+
+        confBut.addEventListener("click", (event) => {
+            event.preventDefault();
+            dialog.requestClose();
+        });
+
+        dialog.addEventListener("close", (e) => {
+            GameController.setPlayerName(names[0].value, 0);
+            GameController.setPlayerName(names[1].value, 1);
+        });
+        dialog.showModal();
+    }
+
+    const drawBoard = function () {
+        const boardContainer = document.querySelector(".gameboard");
+
+        while(boardContainer.firstChild){
+            boardContainer.removeChild(boardContainer.firstChild);
+        }
+
+        const boardState = Gameboard.getBoard();
+
+        for (let i = 0; i < boardState.length; i++) {
+            const button = document.createElement("button");
+            button.textContent = boardState[i];
+            button.classList.add("square");
+            button.addEventListener("click", function () {
+                if(GameController.placePiece(i)) {
+                    showResults();
+                };
+            } );
+            button.addEventListener("click", drawBoard);
+            boardContainer.appendChild(button);
+        }
+    }
+
+    const showResults = function () {
+        console.log(GameController.getStats());
+    }
+
+
+    return {getNames, drawBoard, showResults};
+})();
+
+
+GameController.startGame();
+DisplayManager.drawBoard();

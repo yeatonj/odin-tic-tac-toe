@@ -7,8 +7,35 @@
 
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body onload="DisplayManager.getNames()">
+    <div class="tile">
+        Tic Tac Toe
+    </div>
+
+    <div class="stats">
+
+    </div>
     
+    <div class="gameboard">
+
+    </div>
+
+    <div class="status">
+
+    </div>
+
+    <dialog>
+        <h2>Enter Player Names:</h2>
+        <form>
+            <label for="p1name">Player 1 Name:</label>
+            <input type="text" name="p1name" id="p1name">
+
+            <label for="p2name">Player 2 Name:</label>
+            <input type="text" name="p2name" id="p2name">
+
+            <button type="submit" value="confirm" formmethod="dialog">Confirm</button>
+        </form>
+    </dialog>
 
     <script src="javascript.js"></script>
     
