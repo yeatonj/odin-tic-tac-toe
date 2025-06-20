@@ -49,19 +49,20 @@ const Gameboard = (function () {
     return {pickSquare, checkWin, resetBoard, getBoard};
 })();
 
-const Player = function(name) {
-    const playerName = name;
+const Player = function(pName) {
+    var playerName = pName;
     var score = 0;
 
     const win = () => score++;
-    const getName = () => name;
+    const getName = () => playerName;
     const getScore = () => score;
+    const setName = (name) => {playerName = name;};
 
-    return {win, getName, getScore};
+    return {win, getName, getScore, setName};
 }
 
-const GameController = function(nameOne, nameTwo) {
-    const players = [Player(nameOne), Player(nameTwo)];
+const GameController = (function() {
+    const players = [Player(""), Player("")];
     const playerMarkers = ['X', 'O'];
 
     var activePlayer = 0;
@@ -69,6 +70,8 @@ const GameController = function(nameOne, nameTwo) {
     function swapActive() {
         activePlayer = (activePlayer + 1) % 2;
     }
+
+    const setPlayerName = (pName, id) => {console.log(players[id].setName(pName))};
 
     const startGame = function() {
         activePlayer = 0;
@@ -98,12 +101,10 @@ const GameController = function(nameOne, nameTwo) {
         }
     }
 
-    const getStats = () => {return {p1Name : players[0].getName(), 
-        p1Score : players[0].getScore(), 
-        p2Name : players[1].getName(), 
-        p2Score : players[1].getScore()}};
+    const getStats = () => {return {p0Name : players[0].getName(), 
+        p0Score : players[0].getScore(), 
+        p1Name : players[1].getName(), 
+        p1Score : players[1].getScore()}};
 
-    return {startGame, placePiece, getStats};
-}
-
-const game = GameController("n1", "n2");
+    return {startGame, placePiece, getStats, setPlayerName};
+}) ();
