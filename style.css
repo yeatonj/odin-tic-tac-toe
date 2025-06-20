@@ -1,8 +1,44 @@
+:root {
+    --background-color: #A7C1A8;
+    --tile-background-color: #EEEFE0;
+    --board-background-color: black;
+}
+
+body {
+    text-align: center;
+    display: grid;
+    justify-items: center;
+    background-color: var(--background-color);
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+}
+
 .gameboard {
     display: grid;
-    grid-template-columns: 60px 60px 60px;
-    grid-template-rows: 60px 60px 60px;
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: repeat(3, 100px);
     gap: 5px;
+    background: var(--board-background-color);
+}
+
+.gameboard button {
+    background-color: var(--tile-background-color);
+    border: none;
+    font-size: 80px;
+    display: grid;
+    align-items: center;
+}
+
+.game-area {
+    display: grid;
+    justify-content: center;
+}
+
+.controls button {
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-size: larger;
+    border-radius: 15px;
+    padding: 20px;
+    background-color: var(--tile-background-color);
 }
 
 .controls button.hidden {
@@ -11,4 +47,28 @@
 
 .controls button.visible {
     display: block;
+}
+
+::backdrop {
+    background-color: var(--background-color);
+    opacity: 1;
+}
+
+dialog {
+    border-radius: 30px;
+}
+
+form {
+    display: grid;
+    gap: 10px;
+}
+
+form input {
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+}
+
+form button {
+    width: 100px;
+    justify-self: center;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
 }

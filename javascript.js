@@ -67,6 +67,8 @@ const GameController = (function() {
     var lastWinner = "";
     var gameState = 1; // 0 -> active game, 1 -> no active game
 
+    const activeGame = () => gameState === 0;
+
     var activePlayer = 0;
 
     function swapActive() {
@@ -78,6 +80,7 @@ const GameController = (function() {
 
     const startGame = function() {
         gameState = 0;
+        activePlayer = 0;
         Gameboard.resetBoard();
     }
 
@@ -119,7 +122,7 @@ const GameController = (function() {
 
     const getLastWinner = () => lastWinner;
 
-    return {startGame, placePiece, getStats, setPlayerName, getActivePlayer, getLastWinner};
+    return {startGame, placePiece, getStats, setPlayerName, getActivePlayer, getLastWinner, activeGame};
 }) ();
 
 const DisplayManager = (function () {
@@ -175,7 +178,9 @@ const DisplayManager = (function () {
                     showStats();
                     showNewGameButton();
                 } else {
-                    showCurrentTurn();
+                    if (GameController.activeGame()) {
+                        showCurrentTurn();
+                    }
                 }
             } );
             button.addEventListener("click", drawBoard);

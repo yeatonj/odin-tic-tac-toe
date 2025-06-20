@@ -9,15 +9,18 @@
 </head>
 <body onload="DisplayManager.getNames()">
     <div class="tile">
-        Tic Tac Toe
+        <h2>Welcome to Tic Tac Toe</h2>
     </div>
 
     <div class="stats">
         Stats
     </div>
     
-    <div class="gameboard">
-
+    <div class="game-area">
+        <div class="padding"></div>
+        <div class="gameboard">
+        </div>
+        <div class="padding"></div>
     </div>
 
     <div class="status">
@@ -29,13 +32,18 @@
     </div>
 
     <dialog>
-        <h2>Enter Player Names:</h2>
+        <h2>Tic Tac Toe</h2>
+        <h3>Enter Player Names:</h3>
         <form>
-            <label for="p1name">Player 1 Name:</label>
-            <input type="text" name="p1name" id="p1name">
+            <div>
+                <label for="p1name">Player 1 Name:</label>
+                <input type="text" name="p1name" id="p1name">
+            </div>
 
-            <label for="p2name">Player 2 Name:</label>
-            <input type="text" name="p2name" id="p2name">
+            <div>
+                <label for="p2name">Player 2 Name:</label>
+                <input type="text" name="p2name" id="p2name">
+            </div>
 
             <button type="submit" value="confirm" formmethod="dialog">Confirm</button>
         </form>
