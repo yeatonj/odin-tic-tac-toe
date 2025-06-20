@@ -94,7 +94,7 @@ const GameController = (function() {
                 players[activePlayer].win();
                 gameState = 1;
                 return true;
-            } else if (Gameboard.checkWin() === playerMarkers[activePlayer]) {
+            } else if (Gameboard.checkWin() === "NONE") {
                 // no winner but game over
                 gameState = 1;
                 return true;
