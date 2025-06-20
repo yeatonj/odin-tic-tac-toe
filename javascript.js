@@ -64,6 +64,7 @@ const Player = function(pName) {
 const GameController = (function() {
     const players = [Player(""), Player("")];
     const playerMarkers = ['X', 'O'];
+    var lastWinner = "";
     var gameState = 1; // 0 -> active game, 1 -> no active game
 
     var activePlayer = 0;
@@ -76,7 +77,6 @@ const GameController = (function() {
     const getActivePlayer = () => players[activePlayer].getName();
 
     const startGame = function() {
-        activePlayer = 0;
         gameState = 0;
         Gameboard.resetBoard();
     }
@@ -93,10 +93,12 @@ const GameController = (function() {
             if (Gameboard.checkWin() === playerMarkers[activePlayer]) {
                 players[activePlayer].win();
                 gameState = 1;
+                lastWinner = players[activePlayer].getName();
                 return true;
             } else if (Gameboard.checkWin() === "NONE") {
                 // no winner but game over
                 gameState = 1;
+                lastWinner = undefined;
                 return true;
             } else {
                 // No winner, swap active player
@@ -115,10 +117,26 @@ const GameController = (function() {
         p1Name : players[1].getName(), 
         p1Score : players[1].getScore()}};
 
-    return {startGame, placePiece, getStats, setPlayerName, getActivePlayer};
+    const getLastWinner = () => lastWinner;
+
+    return {startGame, placePiece, getStats, setPlayerName, getActivePlayer, getLastWinner};
 }) ();
 
 const DisplayManager = (function () {
+    // set up the new game button
+    const gameButton = document.querySelector(".controls button");
+    gameButton.addEventListener("click", function () {
+        const status = document.querySelector(".status");
+        while(status.firstChild){
+            status.removeChild(status.firstChild);
+        }
+        showCurrentTurn();
+        hideNewGameButton();
+        GameController.startGame();
+        drawBoard();
+    });
+
+
     const getNames = function() {
         const dialog = document.querySelector("dialog");
         const confBut = document.querySelector("dialog button");
@@ -132,6 +150,8 @@ const DisplayManager = (function () {
         dialog.addEventListener("close", (e) => {
             GameController.setPlayerName(names[0].value, 0);
             GameController.setPlayerName(names[1].value, 1);
+            showStats();
+            showCurrentTurn();
         });
         dialog.showModal();
     }
@@ -152,7 +172,11 @@ const DisplayManager = (function () {
             button.addEventListener("click", function () {
                 if(GameController.placePiece(i)) {
                     showResults();
-                };
+                    showStats();
+                    showNewGameButton();
+                } else {
+                    showCurrentTurn();
+                }
             } );
             button.addEventListener("click", drawBoard);
             boardContainer.appendChild(button);
@@ -160,11 +184,55 @@ const DisplayManager = (function () {
     }
 
     const showResults = function () {
-        console.log(GameController.getStats());
+        const status = document.querySelector(".status");
+        while(status.firstChild){
+            status.removeChild(status.firstChild);
+        }
+        const msg = document.createElement("p");
+        if (GameController.getLastWinner() == undefined) {
+            msg.textContent = `No winner: Cat's Game...`;
+        } else {
+            msg.textContent = `${GameController.getLastWinner()} won.`;
+        }
+        status.appendChild(msg);
     }
 
+    const showStats = function () {
+        const stats = document.querySelector(".stats");
+        while(stats.firstChild){
+            stats.removeChild(stats.firstChild);
+        }
+        const msg1 = document.createElement("p");
+        const msg2 = document.createElement("p");
+        msg1.textContent = `${GameController.getStats().p0Name} (Player 1)'s score: ${GameController.getStats().p0Score}`;
+        msg2.textContent = `${GameController.getStats().p1Name} (Player 2)'s score: ${GameController.getStats().p1Score}`;
+        stats.appendChild(msg1);
+        stats.appendChild(msg2);
+    }
 
-    return {getNames, drawBoard, showResults};
+    function showCurrentTurn() {
+        const status = document.querySelector(".status");
+        while(status.firstChild){
+            status.removeChild(status.firstChild);
+        }
+        const msg = document.createElement("p");
+        msg.textContent = `${GameController.getActivePlayer()}'s turn.`;
+        status.appendChild(msg);
+    }
+
+    function showNewGameButton() {
+        const gameButton = document.querySelector(".controls button");
+        gameButton.classList.remove("hidden");
+        gameButton.classList.add("visible");
+    }
+
+    function hideNewGameButton() {
+        const gameButton = document.querySelector(".controls button");
+        gameButton.classList.remove("visible");
+        gameButton.classList.add("hidden");
+    }
+
+    return {getNames, drawBoard, showCurrentTurn};
 })();
 
 
