@@ -48,3 +48,14 @@ const Gameboard = (function () {
 
     return {pickSquare, checkWin, resetBoard, getBoard};
 })();
+
+const Player = function(name) {
+    const playerName = name;
+    var score = 0;
+
+    const win = () => score++;
+    const getName = () => name;
+    const getScore = () => score;
+
+    return {win, getName, getScore};
+}
