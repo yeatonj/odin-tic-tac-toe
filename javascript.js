@@ -64,6 +64,7 @@ const Player = function(pName) {
 const GameController = (function() {
     const players = [Player(""), Player("")];
     const playerMarkers = ['X', 'O'];
+    var gameState = 1; // 0 -> active game, 1 -> no active game
 
     var activePlayer = 0;
 
@@ -75,19 +76,26 @@ const GameController = (function() {
 
     const startGame = function() {
         activePlayer = 0;
+        gameState = 0;
         Gameboard.resetBoard();
     }
 
     // returns true on game over
     const placePiece = function(loc) {
+        if (gameState == 1) {
+            // no active game
+            return;
+        }
         // if successful
         if (Gameboard.pickSquare(playerMarkers[activePlayer], loc)) {
             // check for a win
             if (Gameboard.checkWin() === playerMarkers[activePlayer]) {
                 players[activePlayer].win();
+                gameState = 1;
                 return true;
             } else if (Gameboard.checkWin() === playerMarkers[activePlayer]) {
                 // no winner but game over
+                gameState = 1;
                 return true;
             } else {
                 // No winner, swap active player
